@@ -1,0 +1,67 @@
+.content {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+strong {
+    font-family: Consolas, monaco, monospace;
+}
+
+.font {
+    font-family: Consolas, monaco, monospace;
+
+}
+
+.fancy-font {
+    font-family: gotham rounded, open-sans, sans-serif;
+}
+
+.navigation__circle {
+    position: absolute;
+    top: 0;
+    transform: rotate(0deg) translateX(-80px);
+    height: 32px;
+    width: 32px;
+}
+
+.navigation__content {
+    transform: rotate(-0deg);
+
+    /* Center the content */
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    /* Take full size */
+    height: 100%;
+    width: 100%;
+}
+
+.backGroundContent {
+    width: 100%;
+    height: 100%; 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.black-line {
+    border:none;
+    border-top:3px solid black;
+    color:#fff;
+    border-radius: 20px;
+    background-color:#fff;
+    height:1px;
+    width: 10vw
+}
+
+.center{
+    margin-left: auto;
+    margin-right: auto;
+}
