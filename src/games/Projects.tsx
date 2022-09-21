@@ -23,7 +23,8 @@ const Block = ({ onclick, header, body }: { header: string, body: string, onclic
                     } : {
                         cursor: 'grab'
                     })
-                } : {})
+                } : {}),
+                overflow: 'auto'
             }}
             onClick={onclick}
             onMouseOver={() => setHovered(true)}
@@ -32,7 +33,7 @@ const Block = ({ onclick, header, body }: { header: string, body: string, onclic
             onMouseUp={() => setClicking(false)}
         >
             <text className='font' style={{ textAlign: 'left', fontSize:'large', fontWeight: 'bold', marginBottom: 4, color: 'white' }}>{header}</text>
-            <text className='font' style={{ textAlign: 'left', fontSize: 'medium',  fontStretch: 'expanded', color: 'white' }}>{body}</text>
+            <text className='font' style={{ textAlign: 'left', fontSize: 'calc((10vw - 4.5rem) / 7)',  fontStretch: 'expanded', color: 'white' }}>{body}</text>
         </div>
     )
 }
