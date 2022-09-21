@@ -168,7 +168,7 @@ export default function Games() {
                     style={{
                         boxShadow: 'rgb(0 0 0 / 60%) 0 3px 10px',
                         width: '50vw',
-                        height: '60vh',
+                        height: selectedGame === 'sorted-to-do' ? 'fit-content' : '60vh',
                         borderRadius: 20,
                         marginBottom: 10,
                         backgroundColor: 'whitesmoke'
@@ -184,7 +184,11 @@ export default function Games() {
 
                             case 'asteroids':
                                 return <div style={{ height: '100%', width: '100%' }}>
-                                    <text className='font' style={{ color: 'white', position: 'absolute', marginLeft: 'auto', marginRight: 'auto' }}>Use WASD to move, and Space to fire</text>
+                                    <text 
+                                        className='font' 
+                                        style={{ color: 'white', position: 'absolute', marginLeft: 'auto', marginRight: 'auto' }}
+                                    >
+                                        Use WASD to move, and Space to fire</text>
                                     <Asteriods />
                                 </div>
 

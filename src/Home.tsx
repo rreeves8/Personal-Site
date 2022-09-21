@@ -3,7 +3,6 @@ import background from './imgs/background2.jpg'
 import Projects from './games/Projects'
 import all from './imgs/experince2.png'
 import space from './imgs/space.jpg'
-
 import { animated, useSpring } from 'react-spring'
 import { StyleHTMLAttributes, useEffect, useRef, useState } from 'react'
 import FallingCat from './FallingCat'
@@ -15,7 +14,6 @@ type BreakComponentProps = {
     height?: string, 
     animatedDivStyle?: React.CSSProperties 
 }
-
 
 const BreakComponent = ({ header, height, children, animatedDivStyle }: BreakComponentProps) => {
     const ref = useRef(null)
