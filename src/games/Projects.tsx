@@ -204,9 +204,9 @@ export default function Games() {
                     })()}
                 </div>
                 {href === '' ? (
-                    <a className='font' style={{ color: 'white'}}>No Repo</a>
+                    <a className='font' style={{ color: 'white', fontSize: 'large'}}>No Repo</a>
                 ) : (
-                    <a className='font' href={href} target="_blank" style={{ color: 'white'}}>Repo</a>
+                    <a className='font' href={href} target="_blank" style={{ color: 'white', fontSize: 'large' }}>Check out the Code Here!!!</a>
                 )}
               
             </div>

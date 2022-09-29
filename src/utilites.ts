@@ -1,3 +1,5 @@
+import { getTextOfJSDocComment } from "typescript";
+
 export function debounce(run: (args: any) => void, wait = 5, immediate = false) {
     let timeout: NodeJS.Timeout | null;
     
@@ -27,3 +29,5 @@ export function checkScrollDirectionIsUp(event: any) {
     }
     oldValue = newValue;
 }
+
+

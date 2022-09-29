@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect } from "react";
 import  Unity, { UnityContext } from "react-unity-webgl";
 
 export default function Asteriods() {
@@ -13,12 +13,10 @@ export default function Asteriods() {
         }
     });
 
-    useMemo(() => {
+    useEffect(() => {
         const resolver = (event: Event) => {
             console.log('got close unity')
             event.stopPropagation()
-
-            window.removeEventListener('close-unity', resolver)
 
             unityContext.removeAllEventListeners();
             unityContext.quitUnityInstance().then(() => {
@@ -28,6 +26,8 @@ export default function Asteriods() {
             })
         }
         window.addEventListener('close-unity', resolver)
+
+        return () => window.removeEventListener('close-unity', resolver)
     }, [])
 
     

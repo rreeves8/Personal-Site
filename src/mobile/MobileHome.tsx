@@ -1,39 +1,19 @@
-import ParallaxImage from './ParallaxImage'
-import background from './imgs/background2.jpg'
-import Projects from './games/Projects'
-import all from './imgs/experince2.png'
-import space from './imgs/space.jpg'
-import { animated, useSpring } from 'react-spring'
-import { StyleHTMLAttributes, useEffect, useMemo, useRef, useState } from 'react'
-import FallingCat from './FallingCat'
-import Socials from './Socials'
-import BreakComponent from './BreakComponent'
-import { useGravity, GravityDiv } from './Gravity'
-import useMeasure from 'react-use-measure'
-import cat from './imgs/cat.gif'
+import BreakComponent from "../BreakComponent";
+import FallingCat from "../FallingCat";
+import Projects from "../games/Projects";
+import ParallaxImage from "../ParallaxImage";
+import Socials from "../Socials";
+import background from '../imgs/background2.jpg'
+import all from '../imgs/experince2.png'
+import space from '../imgs/space.jpg'
 
-export default function Home() {
-    const [ref, bounds] = useMeasure()
-    const state = useRef(false)
+export default function MobileHome(){
 
-    const [start] = useGravity()
-    
-    useEffect(() => {
-        if(!state.current){
-            start()
-            state.current = true
-        }
-    })
-      
     return (
-        <div ref = {ref}>
-            <GravityDiv>
-            <   img src={cat} width={100} height={125}></img>
-            </GravityDiv>
-
+        <>
             <FallingCat />
-            <ParallaxImage image={background} style={{ top: '-200px' }} contentClass='backGroundContent'>
-                <text style={{ fontFamily: 'Brandon Grotesque Medium, sans-serif', color: 'black', position: 'relative', left: 200, fontSize: '64px' }}>Hey, I'm Magnus</text>
+            <ParallaxImage image={background}>
+                <text style={{ fontFamily: 'Brandon Grotesque Medium, sans-serif', color: 'black',  }}>Hi I'm Magnus</text>
             </ParallaxImage>
             <BreakComponent
                 header={
@@ -56,7 +36,7 @@ export default function Home() {
                             marginBottom: '40px'
                         }}
                     >
-                        I'm a Software Engineering student at Western University with a passion for Javascript and web development. In my free time, I'm an avid hockey player and skier.
+                        I'm a 5th-year Software Engineering student at Western University with a passion for Javascript and web development. In my free time, I'm an avid hockey player and skier.
                     </text>
 
                     <img src={all}></img>
@@ -94,6 +74,8 @@ export default function Home() {
                     </text>
                 </div>
             </BreakComponent>
-        </div>
+        </>
     )
+
+
 }
