@@ -17,20 +17,30 @@ const boardColors = Array.from(new Array(8), (v, i) => {
 
 let backRow = ['castle', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'castle']
 
-const Peice = ({ type }: { type: string}) => {
-    const [src, setSrc] = useState<string>('alt')
+const Peice = ({ type, size, setPath }: { type: string | undefined, size: number, setPath: (...args: any) => void }) => {
+    const [src, setSrc] = useState<string | undefined>(type)
     
-    useEffect(() => {
-        if(src === 'alt'){
-            (async () => {
-                pieces[type].then((img) => setSrc(img))
-            })()
-        }
-    })
+    useMemo(() => {
+        (async () => {
+            if(src){
+                console.log(src)
+                setSrc(pieces[src])
+            }
+        })()
+    }, [])
     
     return (
         <div>
-            <img src={src}></img>
+            {src ? (
+                <img 
+                    src={src} 
+                    height={`${size/8}px`} 
+                    width={`${size/8}px`}
+                    onMouseOver={() => {
+                        setPath()
+                    }}
+                ></img> 
+            ): <></>}
         </div>
     )
 }
@@ -48,16 +58,21 @@ const Cell = ({ color, size, children }: { color: string, size: number, children
 export default function Board(){
     const [ref, { height }] = useMeasure()
 
-    const [peices, setPeices] = useState<Array<string>>(() => {
-        return [
-            ...Array.from(new Array(8), (_, i) => 'pawn-black'), 
-            ...Array.from(new Array(8), (_, i) => backRow[i] + '-black'),
-            ...Array.from(new Array(4) , () => new Array(8).fill(undefined)),
-            ...Array.from(new Array(8), (_, i) => 'pawn-white'), 
-            ...Array.from(new Array(8), (_, i) => backRow[i]+ '-white')
-        ]
+    const [turn, setTurn ] = useState<string>('white')
+    
+    const [highlighted, setHighlighted] = useState<Array<Array<boolean>>>(() => {
+        return Array.from(new Array(8), () => new Array(8).fill(false))
     })
 
+    const [peices, setPeices] = useState<Array<Array<string | undefined>>>(() => {
+        return [
+            Array.from(new Array(8), (_, i) => 'pawn-black'), 
+            Array.from(new Array(8), (_, i) => backRow[i] + '-black'),
+            ...Array.from(new Array(4) , () => new Array(8).fill(undefined)),
+            Array.from(new Array(8), (_, i) => 'pawn-white'), 
+            Array.from(new Array(8), (_, i) => backRow[i]+ '-white')
+        ]
+    })
 
     return (
         <div ref = {ref} style={{ height: '100%', width: '100%', padding: 25/2  }}>
@@ -72,11 +87,17 @@ export default function Board(){
                     border: '2px solid #a97a65'
                 }}
             >
-                {boardColors.map((row, index) => (
-                    <div key = {index} style={{ display: 'flex', flexDirection: 'row' }}>
-                        {row.map((color, index) => (
-                            <Cell key={index} color={color} size={height-50}>
-
+                {boardColors.map((row, i) => (
+                    <div key = {i} style={{ display: 'flex', flexDirection: 'row' }}>
+                        {row.map((color, j) => (
+                            <Cell key={j} color={color} size={height-50}>
+                                <Peice
+                                    type={peices[i][j]}
+                                    size={height-50}
+                                    setPath={(args) => {
+                                        console.log(args)
+                                    }}
+                                />
                             </Cell>
                         ))}
                     </div>
