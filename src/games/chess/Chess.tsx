@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import useMeasure from 'react-use-measure'
-import { pieces } from './pieces'
+import { pieces } from './constants'
 
 function* generator(i: number) {
     let index = i

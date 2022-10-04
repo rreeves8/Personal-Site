@@ -13,9 +13,23 @@ import pawnBlack from '../../imgs/pawn-black.png'
 import knightWhite from '../../imgs/knight-white.png'
 import knightBlack from '../../imgs/knight-black.png'
 
-interface Peices {
-    [key: string]: any
+type Peices = {
+    [key in Peice]: any
 }
+
+export type Peice = 
+'king-white' |
+'king-black' |
+'queen-white' |
+'queen-black' |
+'bishop-white' |
+'bishop-black' |
+'castle-white' |
+'castle-black' |
+'pawn-white' |
+'pawn-black' |
+'knight-white' |
+'knight-black'  
 
 export const pieces: Peices = {
     'king-white': kingWhite,
@@ -30,4 +44,29 @@ export const pieces: Peices = {
     'pawn-black': pawnBlack,
     'knight-white': knightWhite,
     'knight-black': knightBlack    
+}
+
+//North east south west
+type MovesADT = {
+    [key in AnyPeice]: [number, number]  
+}
+
+
+export type AnyPeice = 
+'king' |
+'queen' |
+'bishop' |
+'castle' |
+'pawn' |
+'knight' 
+
+
+export const Moves: MovesADT = {
+    'king': [1, 1, 1, 1],
+    'queen':  [1, 1, 1, 1],
+    'bishop': ,
+    'castle': ,
+    'pawn': ,
+    'knight': ,
+
 }
