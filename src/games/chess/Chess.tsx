@@ -1,104 +1,144 @@
 import { useEffect, useMemo, useState } from 'react';
 import useMeasure from 'react-use-measure'
-import { pieces } from './constants'
+import { boardColors, PeiceADT, pieces, Position } from './constants'
+import Board, { BoardADT, Peice } from './Board';
+import { Observable } from 'object-observer';
 
-function* generator(i: number) {
-    let index = i
-    while (true) {
-        index++;
-        yield index % 2 === 0 ? 'smoke-white' : '#a97a65'
+const PeiceComponent = ({ peice, size }: { peice: Peice, size: number }) => {
+    const [ref, { x, y }] = useMeasure()
+
+    const emitHolding = (peice: Peice | undefined) => {
+        setTimeout(() => window.dispatchEvent(new CustomEvent('dropped-peice', { detail: { peice } })))
     }
-}
 
-const boardColors = Array.from(new Array(8), (v, i) => {
-    const GEN = generator(i)
-    return new Array(8).fill(null).map(_ => GEN.next().value as string)
-})
-
-let backRow = ['castle', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'castle']
-
-const Peice = ({ type, size, setPath }: { type: string | undefined, size: number, setPath: (...args: any) => void }) => {
-    const [src, setSrc] = useState<string | undefined>(type)
-    
-    useMemo(() => {
-        (async () => {
-            if(src){
-                console.log(src)
-                setSrc(pieces[src])
-            }
-        })()
-    }, [])
-    
     return (
         <div>
-            {src ? (
-                <img 
-                    src={src} 
-                    height={`${size/8}px`} 
-                    width={`${size/8}px`}
-                    onMouseOver={() => {
-                        setPath()
-                    }}
-                ></img> 
-            ): <></>}
+            <img
+                style={{ opacity: 1 }}
+                src={pieces[peice.peice]}
+                height={`${size / 8}px`}
+                width={`${size / 8}px`}
+                onDrag={(event) => {
+                    event.preventDefault();
+                }}
+                onDragEnd={(e) => {
+                    console.log('endinging')
+                    emitHolding(peice)
+                }}
+            ></img>
         </div>
     )
 }
 
+type CellProps = { 
+    color: string, 
+    size: number, 
+    peice: Peice | Position 
+    tryMove: (spot: Peice | Position, movingPeice: Peice) => void
+}
 
-const Cell = ({ color, size, children }: { color: string, size: number, children?: React.ReactNode }) => {
+
+const Cell = ({ color, size, peice, tryMove } : CellProps) => {
+    const [droppedOn, setDroppedOn] = useState<boolean>(false)
+
+    useEffect(() => {
+        const droppedListener = (event: Event) => {
+            if (droppedOn) {
+                tryMove(peice, event.detail.peice.position)
+                setDroppedOn(false)
+            }
+        }
+
+        window.addEventListener('dropped-peice', droppedListener)
+
+        return () => window.removeEventListener('dropped-peice', droppedListener)
+
+    }, [droppedOn])
+
     return (
-        <div style={{ backgroundColor: color, height: `${size/8}px`, width: `${size/8}px` }}>
-            {children}
+        <div
+            style={{ backgroundColor: color, height: `${size / 8}px`, width: `${size / 8}px` }}
+
+            onDrop={(event) => {
+                setDroppedOn(true)
+            }}
+            onDragOver={(event) => {
+                event.preventDefault();
+            }}
+        >
+            {peice !== undefined ? (
+                <PeiceComponent
+                    peice={peice as Peice}
+                    size={size}
+                />
+            ) : <></>}
         </div>
     )
 }
 
 
-export default function Board(){
+export default function BoardComponent() {
     const [ref, { height }] = useMeasure()
+    const [turn, setTurn] = useState<string>('white')
+    const [boardHandler] = useState<Board>(() => new Board())
+    const [board, setBoard] = useState<BoardADT>(boardHandler.board)
+    const [holding, setHolding] = useState<Peice | undefined>()
 
-    const [turn, setTurn ] = useState<string>('white')
-    
-    const [highlighted, setHighlighted] = useState<Array<Array<boolean>>>(() => {
-        return Array.from(new Array(8), () => new Array(8).fill(false))
-    })
+    const tryMove = (spot: Peice | Position, movingPeice: Peice) => {
+        if(spot === undefined){
+            boardHandler.adjustBoard()
+        }
+    }
 
-    const [peices, setPeices] = useState<Array<Array<string | undefined>>>(() => {
-        return [
-            Array.from(new Array(8), (_, i) => 'pawn-black'), 
-            Array.from(new Array(8), (_, i) => backRow[i] + '-black'),
-            ...Array.from(new Array(4) , () => new Array(8).fill(undefined)),
-            Array.from(new Array(8), (_, i) => 'pawn-white'), 
-            Array.from(new Array(8), (_, i) => backRow[i]+ '-white')
-        ]
-    })
+
+    useEffect(() => {
+        const listeners = {
+            'board-change': (event: Event) => {
+                console.log('emitted')
+                setBoard(boardHandler.board)
+            },
+            'holding-peice': (event: Event) => {
+                console.log('root got holding', event.detail.status)
+                setHolding(() => event.detail.status)
+            }
+        }
+
+        for (const [key, value] of Object.entries(listeners)) {
+            window.addEventListener(key, value)
+        }
+
+        return () => {
+            for (const [key, value] of Object.entries(listeners)) {
+                window.removeEventListener(key, value)
+            }
+        }
+    }, [board, holding])
 
     return (
-        <div ref = {ref} style={{ height: '100%', width: '100%', padding: 25/2  }}>
-            <div 
-                style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    height: 'fit-content', 
-                    width: 'fit-content', 
+        <div ref={ref} style={{ height: '100%', width: '100%', padding: 25 / 2 }}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column-reverse',
+                    height: 'fit-content',
+                    width: 'fit-content',
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     border: '2px solid #a97a65'
                 }}
             >
                 {boardColors.map((row, i) => (
-                    <div key = {i} style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div key={i} style={{ display: 'flex', flexDirection: 'row' }}>
+
                         {row.map((color, j) => (
-                            <Cell key={j} color={color} size={height-50}>
-                                <Peice
-                                    type={peices[i][j]}
-                                    size={height-50}
-                                    setPath={(args) => {
-                                        console.log(args)
-                                    }}
-                                />
-                            </Cell>
+                            <Cell
+                                tryMove={tryMove}
+                                key={j}
+                                color={color}
+                                position={{ x: i, y: j }}
+                                peice={board[i][j] === undefined ?  : board[i][j] as Peice}
+                                size={height - 50}
+                            />
                         ))}
                     </div>
                 ))}

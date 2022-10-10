@@ -2,7 +2,7 @@ import { useState } from "react"
 import ArrayWalkThrough from "./walkthrough/ArrayWalkThrough"
 import Asteriods from "./Asteriods"
 import SortedToDo from "./SortedToDo"
-import Board from "./chess/Chess"
+import {default as Board} from "./chess/Chess"
 
 const Block = ({ onclick, header, body }: { header: string, body: string, onclick: () => void }) => {
     const [isHovered, setHovered] = useState<boolean>(false)
