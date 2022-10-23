@@ -2,6 +2,7 @@ import { useState } from "react"
 import ArrayWalkThrough from "./walkthrough/ArrayWalkThrough"
 import Asteriods from "./Asteriods"
 import SortedToDo from "./SortedToDo"
+import paragraphs from '../Paragraphs.json'
 
 const Block = ({ onclick, header, body }: { header: string, body: string, onclick: () => void }) => {
     const [isHovered, setHovered] = useState<boolean>(false)
@@ -97,7 +98,7 @@ export default function Games() {
                 }}
             >
                 <text style={{ width: '500px', fontSize: 'x-large', fontFamily: 'Brandon Grotesque Regular, sans-serif', color: 'white' }}>
-                   
+                   {paragraphs.demoInto}
                    <a style={{color: 'white'}} href="https://github.com/rreeves8">rreeves8</a>
                 </text>
 
@@ -127,14 +128,14 @@ export default function Games() {
                                 setSelected('sorted-to-do')
                             }}
                             header='Sorted To Do'
-                            body=""
+                            body={paragraphs.sortedToDo}
                         />
                         <Block
                             onclick={() => {
                                 setSelected('array')
                             }}
                             header='Array Sorting'
-                            body=""
+                            body={paragraphs.arraySorting}
                         />
                     </div>
 
@@ -150,7 +151,7 @@ export default function Games() {
                                 setSelected('asteroids')
                             }}
                             header='Asteriods'
-                            body=""
+                            body={paragraphs.asteroids}
                         />
                         <Block
                             onclick={() => {

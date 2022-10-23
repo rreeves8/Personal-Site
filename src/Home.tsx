@@ -7,12 +7,13 @@ import { animated, useSpring } from 'react-spring'
 import { StyleHTMLAttributes, useEffect, useRef, useState } from 'react'
 import FallingCat from './FallingCat'
 import Socials from './Socials'
+import paragraphs from './Paragraphs.json'
 
-type BreakComponentProps = { 
-    header?: string | React.ReactNode, 
-    children?: React.ReactNode | string, 
-    height?: string, 
-    animatedDivStyle?: React.CSSProperties 
+type BreakComponentProps = {
+    header?: string | React.ReactNode,
+    children?: React.ReactNode | string,
+    height?: string,
+    animatedDivStyle?: React.CSSProperties
 }
 
 const BreakComponent = ({ header, height, children, animatedDivStyle }: BreakComponentProps) => {
@@ -50,10 +51,10 @@ const BreakComponent = ({ header, height, children, animatedDivStyle }: BreakCom
                     ) : (header)}
                 </>
             ) : <></>}
-            <animated.div 
+            <animated.div
                 style={{
-                    ...styles, 
-                    ...(animatedDivStyle ? animatedDivStyle: {})
+                    ...styles,
+                    ...(animatedDivStyle ? animatedDivStyle : {})
                 }}
             >
                 {children ? children : <></>}
@@ -92,7 +93,7 @@ export default function Home() {
                             marginBottom: '40px'
                         }}
                     >
-                        I'm a 5th-year Software Engineering student at Western University with a passion for Javascript and web development. In my free time, I'm an avid hockey player and skier.
+                        {paragraphs.title}
                     </text>
 
                     <img src={all}></img>
@@ -125,7 +126,7 @@ export default function Home() {
             </BreakComponent>
             <BreakComponent height='15vh' animatedDivStyle={{ height: '100%', width: '100%' }}>
                 <div style={{ backgroundColor: 'black', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <text style={{  fontSize: 'x-large', fontFamily: 'Brandon Grotesque Regular, sans-serif', color: 'white'}}>
+                    <text style={{ fontSize: 'x-large', fontFamily: 'Brandon Grotesque Regular, sans-serif', color: 'white' }}>
                         Check out the repo for this website here: <a href='https://github.com/rreeves8/Personal-Site'>Repo</a>
                     </text>
                 </div>
