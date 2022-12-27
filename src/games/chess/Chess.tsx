@@ -1,30 +1,19 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useEffect, useMemo, useState } from 'react';
 import useMeasure from 'react-use-measure'
-import { boardColors, PeiceADT, pieces, Position } from './constants'
-import Board, { BoardADT, Peice } from './Board';
-import { Observable } from 'object-observer';
+import { boardColors, pieces, PeiceWholeBoard } from './constants'
+import { PeiceType, ChessBoard, Peice, Move } from './chess-computer/'
 
 const PeiceComponent = ({ peice, size }: { peice: Peice, size: number }) => {
     const [ref, { x, y }] = useMeasure()
-
-    const emitHolding = (peice: Peice | undefined) => {
-        setTimeout(() => window.dispatchEvent(new CustomEvent('dropped-peice', { detail: { peice } })))
-    }
 
     return (
         <div>
             <img
                 style={{ opacity: 1 }}
-                src={pieces[peice.peice]}
+                src={pieces[peice.getName() as PeiceWholeBoard]}
                 height={`${size / 8}px`}
                 width={`${size / 8}px`}
-                onDrag={(event) => {
-                    event.preventDefault();
-                }}
-                onDragEnd={(e) => {
-                    console.log('endinging')
-                    emitHolding(peice)
-                }}
             ></img>
         </div>
     )
@@ -33,40 +22,38 @@ const PeiceComponent = ({ peice, size }: { peice: Peice, size: number }) => {
 type CellProps = { 
     color: string, 
     size: number, 
-    peice: Peice | Position 
-    tryMove: (spot: Peice | Position, movingPeice: Peice) => void
+    peice: Peice | ""
+    tryMove: (peice: Peice | "") => boolean
 }
 
-
 const Cell = ({ color, size, peice, tryMove } : CellProps) => {
-    const [droppedOn, setDroppedOn] = useState<boolean>(false)
+    const [isClicked, setClicked] = useState(false)
+
+    const 
+
 
     useEffect(() => {
-        const droppedListener = (event: Event) => {
-            if (droppedOn) {
-                tryMove(peice, event.detail.peice.position)
-                setDroppedOn(false)
+        if(isClicked){
+            let result = tryMove(peice)
+            if (result === undefined){
+                return true
+            }
+            else {
+                return false
             }
         }
+    })
 
-        window.addEventListener('dropped-peice', droppedListener)
-
-        return () => window.removeEventListener('dropped-peice', droppedListener)
-
-    }, [droppedOn])
+    let filter = isClicked ? { filter: "grayscale(20%)" } : { }
 
     return (
         <div
-            style={{ backgroundColor: color, height: `${size / 8}px`, width: `${size / 8}px` }}
-
-            onDrop={(event) => {
-                setDroppedOn(true)
-            }}
-            onDragOver={(event) => {
-                event.preventDefault();
+            style={{ backgroundColor: color, height: `${size / 8}px`, width: `${size / 8}px`, ...filter }}
+            onClick={() => {
+                setClicked(true)
             }}
         >
-            {peice !== undefined ? (
+            {peice instanceof Peice ? (
                 <PeiceComponent
                     peice={peice as Peice}
                     size={size}
@@ -80,39 +67,30 @@ const Cell = ({ color, size, peice, tryMove } : CellProps) => {
 export default function BoardComponent() {
     const [ref, { height }] = useMeasure()
     const [turn, setTurn] = useState<string>('white')
-    const [boardHandler] = useState<Board>(() => new Board())
-    const [board, setBoard] = useState<BoardADT>(boardHandler.board)
-    const [holding, setHolding] = useState<Peice | undefined>()
+    const [board, setBoard] = useState<ChessBoard>(() => new ChessBoard())
+    
+    const [clickedPeice, setClickedPeice] = useState<Peice | undefined>()
+    const [emptySpot, setEmptySpot] = useState<Move | undefined>()
 
-    const tryMove = (spot: Peice | Position, movingPeice: Peice) => {
-        if(spot === undefined){
-            boardHandler.adjustBoard()
+    const setNextMove = (peice: Peice | "") => {
+        if(clickedPeice){
+            setEmptySpot(() => {
+                let pos = (peice as Peice).getPosition()
+                return {
+                    i: pos[0],
+                    j: pos[1]
+                }
+            })
         }
+        else {
+            if(peice instanceof Peice && !emptySpot) {
+                setClickedPeice(peice)
+            }
+        }
+
+        return false
     }
 
-
-    useEffect(() => {
-        const listeners = {
-            'board-change': (event: Event) => {
-                console.log('emitted')
-                setBoard(boardHandler.board)
-            },
-            'holding-peice': (event: Event) => {
-                console.log('root got holding', event.detail.status)
-                setHolding(() => event.detail.status)
-            }
-        }
-
-        for (const [key, value] of Object.entries(listeners)) {
-            window.addEventListener(key, value)
-        }
-
-        return () => {
-            for (const [key, value] of Object.entries(listeners)) {
-                window.removeEventListener(key, value)
-            }
-        }
-    }, [board, holding])
 
     return (
         <div ref={ref} style={{ height: '100%', width: '100%', padding: 25 / 2 }}>
@@ -132,11 +110,10 @@ export default function BoardComponent() {
 
                         {row.map((color, j) => (
                             <Cell
-                                tryMove={tryMove}
+                                tryMove={setNextMove}
                                 key={j}
                                 color={color}
-                                position={{ x: i, y: j }}
-                                peice={board[i][j] === undefined ?  : board[i][j] as Peice}
+                                peice={board.getboard()[i][j]}
                                 size={height - 50}
                             />
                         ))}

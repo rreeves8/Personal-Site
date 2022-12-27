@@ -3,6 +3,7 @@ import ArrayWalkThrough from "./walkthrough/ArrayWalkThrough"
 import Asteriods from "./Asteriods"
 import SortedToDo from "./SortedToDo"
 import paragraphs from '../Paragraphs.json'
+import BoardComponent from "./chess/Chess"
 
 
 const Block = ({ onclick, header, body }: { header: string, body: string, onclick: () => void }) => {
@@ -185,7 +186,7 @@ export default function Games() {
                                 return <ArrayWalkThrough />
 
                             case 'chess':
-                                return <Board/>
+                                return <BoardComponent/>
 
                             case 'asteroids':
                                 return <div style={{ height: '100%', width: '100%' }}>
