@@ -2,7 +2,8 @@ import { useState } from "react"
 import ArrayWalkThrough from "./walkthrough/ArrayWalkThrough"
 import Asteriods from "./Asteriods"
 import SortedToDo from "./SortedToDo"
-import {default as Board} from "./chess/Chess"
+import paragraphs from '../Paragraphs.json'
+
 
 const Block = ({ onclick, header, body }: { header: string, body: string, onclick: () => void }) => {
     const [isHovered, setHovered] = useState<boolean>(false)
@@ -98,8 +99,8 @@ export default function Games() {
                 }}
             >
                 <text style={{ width: '500px', fontSize: 'x-large', fontFamily: 'Brandon Grotesque Regular, sans-serif', color: 'white' }}>
-                    Here's a small collection of the Projects I've worked on in the past.
-                    To check out more of them visit my Github at <a style={{color: 'white'}} href="https://github.com/rreeves8">rreeves8</a>
+                   {paragraphs.demoInto}
+                   <a style={{color: 'white'}} href="https://github.com/rreeves8">rreeves8</a>
                 </text>
 
                 <div
@@ -128,14 +129,14 @@ export default function Games() {
                                 setSelected('sorted-to-do')
                             }}
                             header='Sorted To Do'
-                            body="Using React Native and Expo I built a mobile app for keeping track of tasks. Using a screen stack the user can navigate between views of sorting tasks, adding tasks and modifing them."
+                            body={paragraphs.sortedToDo}
                         />
                         <Block
                             onclick={() => {
                                 setSelected('array')
                             }}
                             header='Array Sorting'
-                            body="Using react spring in a group projct for school,  I built an automated array sorting animation. "
+                            body={paragraphs.arraySorting}
                         />
                     </div>
 
@@ -151,7 +152,7 @@ export default function Games() {
                                 setSelected('asteroids')
                             }}
                             header='Asteriods'
-                            body="Using unity in my second year of school I created a simple asteriods game. I exported it to webGL for use on my website."
+                            body={paragraphs.asteroids}
                         />
                         <Block
                             onclick={() => {
