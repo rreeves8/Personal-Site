@@ -14,6 +14,9 @@
     "@types/node": "^16.11.59",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
+    "deep-equal": "^2.0.5",
+    "object-equals": "^0.3.0",
+    "object-observer": "^5.1.6",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
@@ -49,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/deep-equal": "^1.0.1"
   }
 }
