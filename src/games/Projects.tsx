@@ -4,6 +4,7 @@ import Asteriods from "./Asteriods"
 import SortedToDo from "./SortedToDo"
 import paragraphs from '../Paragraphs.json'
 
+
 const Block = ({ onclick, header, body }: { header: string, body: string, onclick: () => void }) => {
     const [isHovered, setHovered] = useState<boolean>(false)
     const [isClicking, setClicking] = useState<boolean>(false)
@@ -155,9 +156,9 @@ export default function Games() {
                         />
                         <Block
                             onclick={() => {
-                                setSelected('')
+                                setSelected('chess')
                             }}
-                            header='Clear Screen'
+                            header='Play Chess'
                             body=""
                         />
                     </div>
@@ -182,6 +183,9 @@ export default function Games() {
 
                             case 'array':
                                 return <ArrayWalkThrough />
+
+                            case 'chess':
+                                return <Board/>
 
                             case 'asteroids':
                                 return <div style={{ height: '100%', width: '100%' }}>
