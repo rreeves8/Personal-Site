@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css'
 import Home from './Home'
 import paragraphs from './Paragraphs.json'
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -10,7 +11,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <React.StrictMode>
-        <Home />
+        <BrowserView>
+            <Home />
+        </BrowserView>
+        <MobileView>
+            <div>No mobile version use laptop</div>
+        </MobileView>
     </React.StrictMode>
 );
 
