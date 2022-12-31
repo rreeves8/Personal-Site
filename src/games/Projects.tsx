@@ -43,7 +43,14 @@ const Block = ({ onclick, header, body }: { header: string, body: string, onclic
 
 
 export default function Games() {
-    const [selectedGame, setSelectedState] = useState<string>('')
+    const [selectedGame, setSelectedState] = useState<string>(() => {
+        if(window.location.pathname === '/chess'){
+            return 'chess'
+        }
+        else{
+            return ''
+        }
+    })
 
     const setSelected = async (type: string) => {
         if (selectedGame === 'asteroids' && type === 'asteroids') {

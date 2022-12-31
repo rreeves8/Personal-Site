@@ -1,15 +1,29 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure'
 import { boardColors, pieces, PeiceWholeBoard } from './constants'
-import { PeiceType, ChessBoard, Peice, Move } from './chess-computer/'
+import { PeiceType, ChessBoard, Peice, Move, Board, Player } from './chess-computer/'
 
-const PeiceComponent = ({ peice, size }: { peice: Peice, size: number }) => {
+type Draggables = {
+    dragStart: (coord: Coord) => void
+    dragEnter: (coord: Coord) => void
+    drop: () => void
+}
+
+const PeiceComponent = ({ peice, size, dragStart, dragEnter, drop, turn }: { peice: Peice, size: number, turn: Player } & Draggables) => {
     const [ref, { x, y }] = useMeasure()
 
     return (
         <div>
             <img
+                draggable={peice.getPlayer() === turn}
+                onDragOver={(event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }}
+                onDrop={(e) => drop()}
+                onDragStart={(e) => dragStart(peice.getPosition() as Coord)}
+                onDragEnter={(e) => dragEnter(peice.getPosition() as Coord)}
                 style={{ opacity: 1 }}
                 src={pieces[peice.getName() as PeiceWholeBoard]}
                 height={`${size / 8}px`}
@@ -19,44 +33,40 @@ const PeiceComponent = ({ peice, size }: { peice: Peice, size: number }) => {
     )
 }
 
-type CellProps = { 
-    color: string, 
-    size: number, 
+type Coord = [number, number]
+
+type CellProps = {
+    color: string,
+    size: number,
     peice: Peice | ""
-    tryMove: (peice: Peice | "") => boolean
+    coord: [number, number]
+    dragStart: (coord: Coord) => void
+    dragEnter: (coord: Coord) => void
+    drop: () => void
+    turn: Player
 }
 
-const Cell = ({ color, size, peice, tryMove } : CellProps) => {
-    const [isClicked, setClicked] = useState(false)
-
-    const 
-
-
-    useEffect(() => {
-        if(isClicked){
-            let result = tryMove(peice)
-            if (result === undefined){
-                return true
-            }
-            else {
-                return false
-            }
-        }
-    })
-
-    let filter = isClicked ? { filter: "grayscale(20%)" } : { }
+const Cell = ({ color, size, coord, peice, dragStart, dragEnter, drop, turn }: CellProps) => {
 
     return (
         <div
-            style={{ backgroundColor: color, height: `${size / 8}px`, width: `${size / 8}px`, ...filter }}
-            onClick={() => {
-                setClicked(true)
+            draggable={peice instanceof Peice && peice.getPlayer() === turn}
+            style={{ backgroundColor: color, height: `${size / 8}px`, width: `${size / 8}px` }}
+            onDragEnter={() => dragEnter(coord)}
+            onDrop={(e) => drop()}
+            onDragOver={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
             }}
         >
             {peice instanceof Peice ? (
                 <PeiceComponent
                     peice={peice as Peice}
                     size={size}
+                    dragStart={dragStart}
+                    drop={drop}
+                    turn={turn}
+                    dragEnter={() => dragEnter(coord)}
                 />
             ) : <></>}
         </div>
@@ -64,40 +74,55 @@ const Cell = ({ color, size, peice, tryMove } : CellProps) => {
 }
 
 
+
+
+
+
 export default function BoardComponent() {
     const [ref, { height }] = useMeasure()
-    const [turn, setTurn] = useState<string>('white')
-    const [board, setBoard] = useState<ChessBoard>(() => new ChessBoard())
-    
-    const [clickedPeice, setClickedPeice] = useState<Peice | undefined>()
-    const [emptySpot, setEmptySpot] = useState<Move | undefined>()
+    const [turn, setTurn] = useState<Player>('white')
+    const [gameLogic] = useState<ChessBoard>(() => new ChessBoard())
+    const [board, setBoard] = useState<Board>(() => [...gameLogic.getboard()])
 
-    const setNextMove = (peice: Peice | "") => {
-        if(clickedPeice){
-            setEmptySpot(() => {
-                let pos = (peice as Peice).getPosition()
-                return {
-                    i: pos[0],
-                    j: pos[1]
-                }
-            })
+
+    const dragItem = useRef();
+    const dragOverItem = useRef();
+    const [list, setList] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']);
+
+    const dragStart = (position: Coord) => {
+        //@ts-ignore
+        dragItem.current = position;
+    };
+
+    const dragEnter = (position: Coord) => {
+        //@ts-ignore
+        dragOverItem.current = position;
+    };
+
+    const drop = () => {
+        console.log('drop')
+        let oldPos = dragItem.current as unknown as Coord
+        let newPos = dragOverItem.current as unknown as Coord
+
+        console.log(...oldPos, ...newPos)
+        let moveMade = gameLogic.makeMove(...oldPos, ...newPos, turn)
+
+        if (moveMade) {
+            console.log('rerender')
+            setBoard((oldBoard) => [...gameLogic.getboard()])
+            setTurn(() => gameLogic.getPlayerMove())
         }
-        else {
-            if(peice instanceof Peice && !emptySpot) {
-                setClickedPeice(peice)
-            }
-        }
+    };
 
-        return false
-    }
-
+    console.log(turn)
+    console.log(gameLogic.getPlayerMove())
 
     return (
         <div ref={ref} style={{ height: '100%', width: '100%', padding: 25 / 2 }}>
             <div
                 style={{
                     display: 'flex',
-                    flexDirection: 'column-reverse',
+                    flexDirection: 'column',
                     height: 'fit-content',
                     width: 'fit-content',
                     marginLeft: 'auto',
@@ -110,11 +135,15 @@ export default function BoardComponent() {
 
                         {row.map((color, j) => (
                             <Cell
-                                tryMove={setNextMove}
+                                turn={turn}
+                                coord={[i, j]}
                                 key={j}
                                 color={color}
-                                peice={board.getboard()[i][j]}
+                                peice={board[i][j]}
                                 size={height - 50}
+                                dragEnter={dragEnter}
+                                dragStart={dragStart}
+                                drop={drop}
                             />
                         ))}
                     </div>

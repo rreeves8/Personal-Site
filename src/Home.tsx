@@ -65,6 +65,14 @@ const BreakComponent = ({ header, height, children, animatedDivStyle }: BreakCom
 }
 
 export default function Home() {
+    const chessRef = useRef(null)
+
+    useEffect(() => {
+        if(window.location.pathname === '/chess'){
+            //@ts-ignore
+            chessRef.current.scrollIntoView() 
+        }
+    })
 
     return (
         <>
@@ -99,11 +107,12 @@ export default function Home() {
                     <img src={all}></img>
                 </div>
             </BreakComponent>
-            <ParallaxImage image={space} contentClass='center'>
+            <ParallaxImage image={space} contentClass='center' >
                 <BreakComponent
                     height='fit-content'
                     header={
                         <text
+                            ref={chessRef}
                             style={{
                                 fontSize: 'xx-large',
                                 fontFamily: 'Brandon Grotesque Medium, sans-serif',

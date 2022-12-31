@@ -5,7 +5,7 @@ import { Board, PeiceADT, PeiceType, Player, peices } from "./types";
 const startingPos = ["castle", "knight", "bishop", "queen", "king", "bishop", "knight", "castle"];
 
 export default class ChessBoard {
-    private turn: Player = "black";
+    private turn: Player = "white";
     private board: Board;
     private peices: Map<string, Peice> = new Map()
     private check: boolean;
@@ -98,7 +98,7 @@ export default class ChessBoard {
         this.board[nextI][nextJ] = newValue;
         this.board[i][j] = "";
 
-        this.check = this.isCheck()
+        //this.check = this.isCheck()
         this.turn = this.turn === 'white' ? 'black' : 'white'
     }
 
@@ -118,5 +118,9 @@ export default class ChessBoard {
 
     getboard() {
         return this.board
+    }
+
+    getPlayerMove(){
+        return this.turn
     }
 }
