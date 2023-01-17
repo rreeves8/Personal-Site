@@ -7,9 +7,8 @@ export type Move = {
 export interface PeiceADT {
     getType(): string;
     getValidMoves(board: Board): MoveValidator;
-    isCheck(board: Board, king: Peice): boolean
 }
-export const peices: Array<PeiceType> = ["castle", "knight", "bishop", "queen", "king", "bishop", "knight", "castle", 'pawn']
+export const peices: Array<PeiceType> = ["castle", "knight", "bishop", "queen", "king", "bishop", "knight", "castle", "pawn"];
 
 export type PeiceType = "castle" | "knight" | "bishop" | "queen" | "king" | "pawn";
 export type Player = "black" | "white";

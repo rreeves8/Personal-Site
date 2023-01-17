@@ -1,6 +1,6 @@
 import { Button, Grid } from '@mui/material'
 import React, { useEffect, useLayoutEffect, useContext, useState } from "react"
-import { WalkThroughProps, WalkThroughState, Transition } from '../../types';
+import { WalkThroughProps, WalkThroughState, Transition } from '../../../types';
 import { useSpring, animated, useSpringRef } from 'react-spring'
 import { WalkThroughProvider, WalkThroughContext } from './WalkThroughProvider';
 import { store } from './Reducer';

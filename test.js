@@ -1,23 +1,24 @@
-const { Observable } = require('object-observer');
+class Tester {
+    constructor(){
+        this.x = 1;
+        this.y = 2
+    }
 
-class Item {
-    constructor(item, coords){
-        this.item = item
-        this.coords = coords
+    updateX(x){
+        this.x = x
     }
 }
 
+function clone(obj) {
+    const clone = Object.assign({}, obj);
+    Object.setPrototypeOf(clone, obj.prototype );
+    return clone
+}
 
-let a = Observable.from([[1, 2], [3, 4]].map((row, i) => row.map((number, j) => new Item(number, [i, j]))))
 
 
-Observable.observe(a, changes => {
+let test = new Tester()
+let test2 = clone(test)
 
-    
-    console.log(JSON.stringify(changes))
-});
-
-let oldSlot = a[1][0]
-
-a[1][0] = a[0][0]
-a[0][0] = oldSlot
+test.updateX()
+test2.updateX()

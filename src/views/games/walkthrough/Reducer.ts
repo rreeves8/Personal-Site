@@ -1,4 +1,4 @@
-import { Transition, Level, TransitionVectors, PositionValues } from '../../types';
+import { Transition, Level, TransitionVectors, PositionValues } from '../../../types';
 import { createStore } from 'redux';
 
 const y = -46.5

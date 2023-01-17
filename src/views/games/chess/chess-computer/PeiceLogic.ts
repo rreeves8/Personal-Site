@@ -1,49 +1,40 @@
 import { Peice } from "./Peice";
-import { Board, Vector } from "./types";
+import { Board, Move, Vector } from "./types";
 
 export const validateMove = (board: Board, i: number, j: number, nextI: number, nextJ: number) => {
-    return inBounds(nextI, nextJ) && !peiceInTheWay(board, i, j, nextI, nextJ)
+    return inBounds(nextI, nextJ) && !peiceInTheWay(board, i, j, nextI, nextJ);
 };
 
 export const peiceInTheWay = (board: Board, i: number, j: number, nextI: number, nextJ: number) => {
     let vector = toVector(i, j, nextI, nextJ);
-    let magnitude = positive(vector)
-    const inc = (value: number, amount: number) => value + amount
-    const dec = (value: number, amount: number) => value - amount
+    let magnitude = positive(vector);
+
+    const inc = (value: number) => value + 1;
+    const dec = (value: number) => value - 1;
 
     const determine = {
         dxFunction: isPositive(vector.dx) ? inc : dec,
         dyFunction: isPositive(vector.dy) ? inc : dec,
-    }
+    };
 
-    let counters = {
-        ii: determine.dxFunction(i, magnitude.dx),
-        get currentI() {
-            return this.ii
+    const counters = {
+        x: 0,
+        y: 0,
+        incr: function () {
+            this.x = this.x + 1;
+            this.y = this.y + 1;
         },
-        set currentI(counter: number){
-            let oldII = this.ii
-            this.ii = determine.dxFunction(oldII, counter)
-        },
+    };
 
-        jj: determine.dyFunction(j, magnitude.dy),
-        get currentJ() {
-            return this.jj
-        },
-        set currentJ(counter: number){
-            let oldJJ = this.jj
-            this.jj = determine.dyFunction(oldJJ, counter)
-        }
-    }
-
-    for (let counter = 0; counter < magnitude.dx - 1; counter++) {
-        if (board[counters.currentI][counters.currentJ] instanceof Peice) {
+    for (
+        let x = determine.dxFunction(i), y = determine.dyFunction(j);
+        counters.x < magnitude.dx - 1 && counters.y < magnitude.dy - 1;
+        counters.incr(), x = determine.dxFunction(x), y = determine.dyFunction(y)
+    ) {
+        if (board[x][y] instanceof Peice) {
             return true;
         }
-        counters.currentI = counter
-        counters.currentJ = counter
     }
-
     return false;
 };
 
@@ -70,7 +61,7 @@ export const isDiagonal = (vector: Vector): boolean => {
     return converted.dx === converted.dy;
 };
 
-const isPositive = (change: number) => (change > 0);
+const isPositive = (change: number) => change > 0;
 
 export const toPositive = (change: number) => (change < 0 ? change * -1 : change);
 
