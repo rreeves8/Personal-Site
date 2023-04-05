@@ -1,13 +1,16 @@
 import { useEffect, useRef } from "react";
-import FallingCat from "./views/components/FallingCat";
-import Title from "./views/screens/Title";
-import Experince from "./views/screens/Experince";
-import Projects from "./views/screens/Projects";
-import SocialSection from "./views/screens/Socials";
-import BreakComponent from "./views/components/BreakView";
+import { Background, Parallax } from "react-parallax";
+import { Button } from "reactstrap";
+import { Routes, Route, Outlet, Link } from "react-router-dom";
+import background from "./imgs/background2.png";
+import Projects from "./projects/page";
+import Personal from "./personal/page";
+import { useNavigate } from "react-router-dom";
+import FallingCat from "./(components)/FallingCat";
 
 export default function Home() {
     const chessRef = useRef(null);
+    const router = useNavigate();
 
     useEffect(() => {
         if (window.location.pathname === "/chess") {
@@ -19,26 +22,54 @@ export default function Home() {
     return (
         <>
             <FallingCat />
-            <Title />
-            <Experince />
-            <Projects chessRef={chessRef} />
-            <SocialSection />
-            <BreakComponent height="15vh" animatedDivStyle={{ height: "100%", width: "100%" }}>
-                <div
-                    style={{
-                        backgroundColor: "black",
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <text style={{ fontSize: "x-large", fontFamily: "Brandon Grotesque Regular, sans-serif", color: "white" }}>
-                        Check out the repo for this website here: <a href="https://github.com/rreeves8/Personal-Site">Repo</a>
-                    </text>
-                </div>
-            </BreakComponent>
+
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <Parallax bgImage={background} className="content" strength={400} bgImageStyle={{ top: "-100px" }}>
+                            <div
+                                style={{
+                                    position: "relative",
+                                    left: 1000,
+                                    top: 400,
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "2.5vh",
+                                }}
+                            >
+                                <text
+                                    style={{
+                                        fontFamily: "Brandon Grotesque medium",
+                                        color: "black",
+                                        fontSize: "64px",
+                                    }}
+                                >
+                                    Hi I&apos;m Magnus
+                                </text>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        width: "100%",
+                                        justifyContent: "center",
+                                        gap: "3vw",
+                                    }}
+                                >
+                                    <Button color="primary" size="lg" onClick={() => router("/personal")}>
+                                        About me
+                                    </Button>
+                                    <Button color="primary" size="lg" onClick={() => router("/projects")}>
+                                        Projects
+                                    </Button>
+                                </div>
+                            </div>
+                        </Parallax>
+                    }
+                ></Route>
+                <Route path="personal" element={<Personal />} />
+                <Route path="projects" element={<Projects />} />
+            </Routes>
         </>
     );
 }

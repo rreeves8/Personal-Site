@@ -1,7 +1,0 @@
-{
-    "title": "I'm a 5th-year Software Engineering student at Western University with a passion for Javascript and web development. In my free time, I'm an avid hockey player and skier.",
-    "demoInto": "Here's a small collection of the projects I've worked on in the past. To check out more of them visit my Github at ",
-    "sortedToDo": "Using React Native and Expo I built a mobile app for keeping track of tasks. Using a screen stack the user can navigate between views of sorting tasks, adding tasks and modifing them.",
-    "arraySorting": "Using React Spring in a group project for school,  I built an automated array sorting animation.",
-    "asteroids": "Using Unity in my second year of school, I created a simple Asteroids game. I exported it to webGL for use on my website."
-}

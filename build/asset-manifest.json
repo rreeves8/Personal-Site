@@ -1,17 +1,24 @@
 {
   "files": {
-    "main.css": "/static/css/main.82eb8262.css",
-    "main.js": "/static/js/main.a3401b1e.js",
-    "static/media/cat.gif": "/static/media/cat.8eb5dab711f735737f96.gif",
-    "static/media/space.jpg": "/static/media/space.ee2922854adec9e72508.jpg",
-    "static/media/background2.jpg": "/static/media/background2.d7e7166e7e79f9ca8812.jpg",
-    "static/media/experince2.png": "/static/media/experince2.b1f0c4ee377e68f64b99.png",
-    "index.html": "/index.html",
-    "main.82eb8262.css.map": "/static/css/main.82eb8262.css.map",
-    "main.a3401b1e.js.map": "/static/js/main.a3401b1e.js.map"
+    "main.css": "./static/css/main.82eb8262.css",
+    "main.js": "./static/js/main.15c3baac.js",
+    "static/media/cat.gif": "./static/media/cat.8eb5dab711f735737f96.gif",
+    "static/media/space.jpg": "./static/media/space.ee2922854adec9e72508.jpg",
+    "static/media/background2.png": "./static/media/background2.50797fbb6953c67726b7.png",
+    "static/media/water.jpg": "./static/media/water.6ed8e74f0a6219df1cf6.jpg",
+    "static/media/react.png": "./static/media/react.8a6fc0a24a800d1e0f4a.png",
+    "static/media/consoleOne.png": "./static/media/consoleOne.c1134987f41381f05812.png",
+    "static/media/school.png": "./static/media/school.347b1e51c6df0a52ce36.png",
+    "static/media/dc.png": "./static/media/dc.7b1379d2ebc13b0bfa76.png",
+    "static/media/firebase.png": "./static/media/firebase.8584a25cb878e376b81d.png",
+    "static/media/github-white.png": "./static/media/github-white.a5db7b9c174cbca7e341.png",
+    "static/media/Nextjs.png": "./static/media/Nextjs.6db19b31cc0a2f63cff4.png",
+    "index.html": "./index.html",
+    "main.82eb8262.css.map": "./static/css/main.82eb8262.css.map",
+    "main.15c3baac.js.map": "./static/js/main.15c3baac.js.map"
   },
   "entrypoints": [
     "static/css/main.82eb8262.css",
-    "static/js/main.a3401b1e.js"
+    "static/js/main.15c3baac.js"
   ]
 }
